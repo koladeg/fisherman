@@ -29,14 +29,15 @@ function animation() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     if(fishermanXaxis >= fishermanEndPosition){
         fishermanXaxis = fishermanEndPosition 
+        hookYaxis++
     }
     ctx.drawImage(lake, 0, 0, canvas.height, canvas.width)
     ctx.drawImage(fisherman, fishermanXaxis++, 120, 200, 150) 
-    fish.forEach(fh => {
-        ctx.fillRect(fh.x +=Math.random() * (5 - 2) + 2 , fh.y, fh.width, fh.height )
-    });
-    // while(fishermanEndPosition < fishermanXaxis){ hookXaxis = fishermanXaxis-1 }
-    ctx.drawImage(hook, fishermanXaxis-1, 125, 10, 15)
+    // fish.forEach(fh => {
+    //     ctx.fillRect(fh.x +=Math.random() * (5 - 2) + 2 , fh.y, fh.width, fh.height )
+    // });
+    if (hookXaxis >= 500){ hookXaxis -= 10}
+    ctx.drawImage(hook, fishermanXaxis-1, hookYaxis, 10, 15)
 }
 function makeFish() {
     let newFish =  {
@@ -48,11 +49,11 @@ function makeFish() {
      fish.push(newFish)   
 }
 // function movehook(e){
-//     if(hookXaxis >= fishermanEndPosition){
-//         hookYaxis = 300
+//     if(fishermanXaxis >= fishermanEndPosition){
+//         hookYaxis = 3
 //     }  
 // }
-setInterval( makeFish, Math.random() * (3000 - 100) + 100);
+// setInterval( makeFish, Math.random() * (3000 - 100) + 100);
 
  
 
