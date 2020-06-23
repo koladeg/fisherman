@@ -21,11 +21,13 @@ let animationId
 let fish = []
 let hook = new Image()
 hook.src = 'images/hook.jpg'
+let hookXaxis 
+hookYaxis = 125
 // ********************* Functions *******************************
 function animation() {
     animationId = window.requestAnimationFrame(animation)
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    if( fishermanXaxis >= fishermanEndPosition){
+    if(fishermanXaxis >= fishermanEndPosition){
         fishermanXaxis = fishermanEndPosition 
     }
     ctx.drawImage(lake, 0, 0, canvas.height, canvas.width)
@@ -33,6 +35,7 @@ function animation() {
     fish.forEach(fh => {
         ctx.fillRect(fh.x +=Math.random() * (5 - 2) + 2 , fh.y, fh.width, fh.height )
     });
+    // while(fishermanEndPosition < fishermanXaxis){ hookXaxis = fishermanXaxis-1 }
     ctx.drawImage(hook, fishermanXaxis-1, 125, 10, 15)
 }
 function makeFish() {
@@ -44,10 +47,15 @@ function makeFish() {
      } 
      fish.push(newFish)   
 }
+// function movehook(e){
+//     if(hookXaxis >= fishermanEndPosition){
+//         hookYaxis = 300
+//     }  
+// }
 setInterval( makeFish, Math.random() * (3000 - 100) + 100);
 
  
 
 // ************************  Script **********************************
-
+// document.onkeydown = movehook
 animation()
