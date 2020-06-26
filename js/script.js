@@ -35,6 +35,7 @@ hookHeight = 15
 hookwidth = 10
 let imageX = 0
 let fishAction = ['caught', 'moving'];
+let fishing = true
 // let timeMeter = document.querySelector('.time').innerText
 // ********************* Class *******************************
 class Fish {
@@ -117,26 +118,10 @@ class Fish {
           }
       }
       points(){
-        if (this.fishtype === 'smalyel') {
-           return 2
-        }else if (this.fishtype === 'bigyel') {
-            return 3
-        }else if (this.fishtype === 'smalbrn') {
-            return 2
-        }else if (this.fishtype === 'bigbrn') {
-            return 4
-        }else if (this.fishtype === 'blue') {
-            return 5
-        }else if (this.fishtype === 'pink') {
-            return 5
-        }else if (this.fishtype === 'odd') {
-            return 5
-        }else if (this.fishtype === 'grey') {
-            return 5
-        }
+        return 5
       }
       detectCatch(){
-        if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 400){ //make sure hook works when inside water
+        if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 400 && fishing){ //make sure hook works when inside water
             if (!( hookXaxis > this.x + this.width ||
                 hookYaxis + hookHeight < this.y ||
                 hookYaxis > this.y + this.height ||
@@ -144,6 +129,7 @@ class Fish {
                 )) {
                console.log('Got one!!')
                this.action = 'caught'
+               fishing = false
             //    window.cancelAnimationFrame(animationId)
             }
         }   
@@ -152,6 +138,8 @@ class Fish {
         if(this.action === 'caught' && hookYaxis <= 130){//Add points and return fish to lake
             this.action = 'moving'
             this.caught = false
+            fishing = true
+            this.Framey -= 1
             this.x = 0 - canvas.width
             this.y = Math.random() * (750 - 350) + 350
             if (this.x == 0){
