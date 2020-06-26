@@ -33,7 +33,6 @@ hookYaxis = 125
 hookXaxis = fishermanEndPosition-1
 hookHeight = 15
 hookwidth = 10
-let imageX = 0
 let fishAction = ['caught', 'moving'];
 let fishing = true
 // let timeMeter = document.querySelector('.time').innerText
@@ -119,7 +118,7 @@ class Fish {
           }
       }
       fishValues(){
-        return 5
+        return 2
       }
       detectCatch(){
         if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 400 && fishing){ //make sure hook works when inside water
@@ -166,7 +165,7 @@ function animation() {
     ctx.drawImage(fisherman, fishermanXaxis++, 120, 200, 150)
     ctx.fillStyle = 'black'
     
-    if(hookYaxis > 781){ hookYaxis -= 2}
+    if(hookYaxis > 750){ hookYaxis -= 5}
     ctx.drawImage(hook, fishermanXaxis-1, hookYaxis, hookwidth, hookHeight)
     for (i = 0; i < realFish.length; i++) {
         realFish[i].backAgain()
@@ -174,24 +173,19 @@ function animation() {
             tsCaught = false
             points+= 10
          }
-        console.log(points)
         realFish[i].draw()
         realFish[i].update()
-        let isit = realFish[i].points
-        console.log(points)
-        realFish[i].detectCatch()
-        // if(isit === true){itsCaught = true}// stop other fish from getting caugth
-        // if(itsCaught){
-        //     realFish[i].detectCatch()
-        // }    
+        realFish[i].detectCatch()        
     }
+    ctx.font = "80px Georgia";
+    ctx.fillStyle = 'red';
+    ctx.strokeText(points, 700, 70);
+    ctx.fillText(points, 700, 70);
     if(points > 5){
         window.cancelAnimationFrame(animationId)
-        alert('You won')
+        alert(`You won. Your score is ${points}`)
         location.reload()
     }
-    if(imageX + 50 > 50 * 3){ imageX = 0}
-    // ctx.drawImage(fish1, imageX+=48, 96, 48, 48, 33, 33, 33, 44)
 }
 function addPoints(num){
     let score = document.querySelector('#points')
@@ -205,18 +199,23 @@ function movehook(e){
     if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 145){
         if(e.code == "Space" || e.code == "ArrowUp"){
         hookYaxis -= 30
-    }
+        console.log(hookYaxis)
+        }
     }
 }
 function countdown(minutes) {
     var seconds = 60;
-    var mins = 5
+    var mins = 3
     function tick() {
         let counter = document.getElementById("time");
         let current_minutes = mins-1
         seconds--;
         counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
-        if(counter.innerHTML === '0:00'){window.cancelAnimationFrame(animationId)}
+        if(counter.innerHTML === '0:00'){
+            window.cancelAnimationFrame(animationId)
+            alert(`Time up! Your score is ${points}`)
+            location.reload()
+        }
         if( seconds > 0 ) {
             setTimeout(tick, 1000);
         } else {
