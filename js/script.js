@@ -37,6 +37,7 @@ let imageX = 0
 let fishAction = ['caught', 'moving'];
 let fishing = true
 // let timeMeter = document.querySelector('.time').innerText
+
 // ********************* Class *******************************
 class Fish {
     constructor(){
@@ -117,7 +118,7 @@ class Fish {
             this.y = hookYaxis
           }
       }
-      points(){
+      fishValues(){
         return 5
       }
       detectCatch(){
@@ -142,9 +143,7 @@ class Fish {
             this.Framey -= 1
             this.x = 0 - canvas.width
             this.y = Math.random() * (750 - 350) + 350
-            if (this.x == 0){
-                points()
-            }
+            addPoints(this.fishValues())    
          }  
    }
 }
@@ -186,8 +185,21 @@ function animation() {
         //     realFish[i].detectCatch()
         // }    
     }
+    if(points > 5){
+        window.cancelAnimationFrame(animationId)
+        alert('You won')
+        location.reload()
+    }
     if(imageX + 50 > 50 * 3){ imageX = 0}
     // ctx.drawImage(fish1, imageX+=48, 96, 48, 48, 33, 33, 33, 44)
+}
+function addPoints(num){
+    let score = document.querySelector('#points')
+    console.log('add points', num, points)
+    let currentPoints = Number(score.innerText)
+    currentPoints += num
+    points = currentPoints
+    score.innerText = currentPoints
 }
 function movehook(e){
     if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 145){
