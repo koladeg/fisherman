@@ -15,13 +15,15 @@ let lake = new Image()
 lake.src ='images/background.png'
 let fisherman = new Image()
 let fishermanXaxis = -40
-let fishermanEndPosition = (canvas.width/2) 
+let fishermanEndPosition = (canvas.width/2)
 fisherman.src = 'images/fishman.png'
 let animationId
 let realFish = [];
+let itsCaught = false
 let hook = new Image()
+let points = 0
 hook.src = 'images/hook.png'
-// let fish1 = new Image()
+let fishtype = ['smalyel','bigyel','smlbrn','bigbrn','blue','pink', 'odd','grey' ]
 // fish1.src = 'images/fish6.png'
 let srcfish = {}
 srcfish.fish = new Image()
@@ -33,40 +35,105 @@ hookHeight = 15
 hookwidth = 10
 let imageX = 0
 let fishAction = ['caught', 'moving'];
-// ********************* Classes *******************************
+// let timeMeter = document.querySelector('.time').innerText
+// ********************* Class *******************************
 class Fish {
     constructor(){
         this.height = 48;
         this.width = 48;
+        this.caught = false
+        this.notreleased = true
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * (750 - 350) + 350,
-        this.cFrame = 0;
-        this.mFrame = 2;  
+        this.Framex = 0;
+        this.Framey = 2;
         this.speed = (Math.random() * 3.5) + 1.5;
         this.action = 'moving'
-         
+        this.fishtype = fishtype[Math.floor(Math.random() * fishtype.length)]
+        if (this.fishtype === 'smalyel') {
+            this.Framex = 0;
+            this.Framey = 2;
+            this.minFrame = 0;
+            this.maxFrame = 2;
+        }else if (this.fishtype === 'bigyel') {
+            this.Framex = 3;
+            this.Framey = 2;
+            this.minFrame = 3;
+            this.maxFrame = 5;
+        }else if (this.fishtype === 'smalbrn') {
+            this.Framex = 6;
+            this.Framey = 2;
+            this.minFrame = 6;
+            this.maxFrame = 8;
+        }else if (this.fishtype === 'bigbrn') {
+            this.Framex = 9;
+            this.Framey = 2;
+            this.minFrame = 9;
+            this.maxFrame = 11;
+        }else if (this.fishtype === 'blue') {
+            this.Framex = 0;
+            this.Framey = 6;
+            this.minFrame = 0;
+            this.maxFrame = 2;
+        }else if (this.fishtype === 'pink') {
+            this.Framex = 3;
+            this.Framey = 6;
+            this.minFrame = 3;
+            this.maxFrame = 5;
+        }else if (this.fishtype === 'odd') {
+            this.Framex = 6;
+            this.Framey = 6;
+            this.minFrame = 6;
+            this.maxFrame = 8;
+        }else if (this.fishtype === 'grey') {
+            this.Framex = 9;
+            this.Framey = 6;
+            this.minFrame = 9;
+            this.maxFrame = 11;
+        }
     }
     draw(){
-        this.cFrame++;
-        if(this.cFrame >= this.mFrame + 1){
-          this.cFrame = 0;
-        }   
      // (imgObj, imgX, imgY, imgWidth, imgHeight, xCanvas, yCanvas, widthCanvas, heightCanvas)
-        ctx.drawImage(srcfish.fish, this.cFrame*this.width,this.mFrame * this.height,this.height,this.width,this.x,this.y, this.height,this.width);
+        ctx.drawImage(srcfish.fish, this.Framex*this.width,this.Framey * this.height,this.height,this.width,this.x-24,this.y, this.height,this.width);
+        if(this.Framex < this.maxFrame){this.Framex++;}
+        else{ this.Framex = this.minFrame}
       }
       update(){
           if(this.action === 'moving'){
             if(this.x < canvas.width + this.width){
                 this.x += this.speed;
-              }else{ 
+              }else{
                   this.x = 0 - canvas.width
                   this.y = Math.random() * (750 - 350) + 350
-                } //return fish fish after some time 
-          }else if(this.action === 'caught'){
+                } //return fish fish after some time
+          }else if(this.action === 'caught' && !this.caught){ //Only gets called once
             this.x = hookXaxis
             this.y = hookYaxis
-            this.mFrame = 3
+            this.caught = true
+            this.Framey += 1
+          } else { //Gets called alot
+            this.x = hookXaxis
+            this.y = hookYaxis
           }
+      }
+      points(){
+        if (this.fishtype === 'smalyel') {
+           return 2
+        }else if (this.fishtype === 'bigyel') {
+            return 3
+        }else if (this.fishtype === 'smalbrn') {
+            return 2
+        }else if (this.fishtype === 'bigbrn') {
+            return 4
+        }else if (this.fishtype === 'blue') {
+            return 5
+        }else if (this.fishtype === 'pink') {
+            return 5
+        }else if (this.fishtype === 'odd') {
+            return 5
+        }else if (this.fishtype === 'grey') {
+            return 5
+        }
       }
       detectCatch(){
         if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 400){ //make sure hook works when inside water
@@ -76,41 +143,60 @@ class Fish {
                 hookXaxis + hookwidth < this.x
                 )) {
                console.log('Got one!!')
-               window.cancelAnimationFrame(animationId)
-              //  alert('game over')
+               this.action = 'caught'
+            //    window.cancelAnimationFrame(animationId)
             }
-        }
+        }   
       }
+      backAgain(){
+        if(this.action === 'caught' && hookYaxis <= 130){//Add points and return fish to lake
+            this.action = 'moving'
+            this.caught = false
+            this.x = 0 - canvas.width
+            this.y = Math.random() * (750 - 350) + 350
+            if (this.x == 0){
+                points()
+            }
+         }  
+   }
 }
 for (let i = 0; i < numberOfFish; i++) {
-    realFish.push(new Fish())   
+    realFish.push(new Fish())
 }
-
-
-
 // ********************* Functions *******************************
 function animation() {
     animationId = window.requestAnimationFrame(animation)
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     if(fishermanXaxis >= fishermanEndPosition){
-        fishermanXaxis = fishermanEndPosition 
+        fishermanXaxis = fishermanEndPosition
         hookYaxis++
     }
     ctx.drawImage(lake, 0, 0, canvas.height, canvas.width)
     ctx.fillStyle = 'white'
+
     if(fishermanXaxis === fishermanEndPosition)
-        ctx.fillRect(fishermanXaxis-1 + hookwidth/2, 195, 3, hookYaxis - 190)
-    ctx.drawImage(fisherman, fishermanXaxis++, 120, 200, 150) 
+        ctx.fillRect(fishermanXaxis-1 + hookwidth/2, 125, 3, hookYaxis - 125)
+    ctx.drawImage(fisherman, fishermanXaxis++, 120, 200, 150)
     ctx.fillStyle = 'black'
-    // fish.forEach(fh => {
-    //     ctx.fillRect(fh.x +=Math.random() * (5 - 2) + 2 , fh.y, fh.width, fh.height )
-    // });
+    
     if(hookYaxis > 781){ hookYaxis -= 2}
     ctx.drawImage(hook, fishermanXaxis-1, hookYaxis, hookwidth, hookHeight)
     for (i = 0; i < realFish.length; i++) {
+        realFish[i].backAgain()
+        if(realFish[i].backAgain()){i
+            tsCaught = false
+            points+= 10
+         }
+        console.log(points)
         realFish[i].draw()
-        realFish[i].update() 
-        realFish[i].detectCatch() 
+        realFish[i].update()
+        let isit = realFish[i].points
+        console.log(points)
+        realFish[i].detectCatch()
+        // if(isit === true){itsCaught = true}// stop other fish from getting caugth
+        // if(itsCaught){
+        //     realFish[i].detectCatch()
+        // }    
     }
     if(imageX + 50 > 50 * 3){ imageX = 0}
     // ctx.drawImage(fish1, imageX+=48, 96, 48, 48, 33, 33, 33, 44)
@@ -119,12 +205,30 @@ function movehook(e){
     if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 145){
         if(e.code == "Space" || e.code == "ArrowUp"){
         hookYaxis -= 30
-    }  
+    }
     }
 }
- 
-
+function countdown(minutes) {
+    var seconds = 60;
+    var mins = 5
+    function tick() {
+        let counter = document.getElementById("time");
+        let current_minutes = mins-1
+        seconds--;
+        counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+        if(counter.innerHTML === '0:00'){window.cancelAnimationFrame(animationId)}
+        if( seconds > 0 ) {
+            setTimeout(tick, 1000);
+        } else {
+            if(mins > 1){
+                countdown(mins-1);
+            }
+        }
+    }
+    tick();
+}
+//You can use this script with a call to onclick, onblur or any other attribute you would like to use.
+countdown();
 // ************************  Script **********************************
 document.onkeydown = movehook
 animation()
-
