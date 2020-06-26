@@ -28,7 +28,7 @@ let fishtype = ['smalyel','bigyel','smlbrn','bigbrn','blue','pink', 'odd','grey'
 let srcfish = {}
 srcfish.fish = new Image()
 srcfish.fish.src = 'images/fish6.png'
-let numberOfFish = 5
+let numberOfFish = 8
 hookYaxis = 125
 hookXaxis = fishermanEndPosition-1
 hookHeight = 15
@@ -106,7 +106,7 @@ class Fish {
               }else{
                   this.x = 0 - canvas.width
                   this.y = Math.random() * (750 - 350) + 350
-                } //return fish fish after some time
+                } //return fish after some time
           }else if(this.action === 'caught' && !this.caught){ //Only gets called once
             this.x = hookXaxis
             this.y = hookYaxis
@@ -181,6 +181,9 @@ function animation() {
     ctx.fillStyle = 'red';
     ctx.strokeText(points, 700, 70);
     ctx.fillText(points, 700, 70);
+    // ctx.strokeText(time, 400, 70);
+    // ctx.fillText(time, 400, 70);
+    // console.log(time)
     if(points > 5){
         window.cancelAnimationFrame(animationId)
         alert(`You won. Your score is ${points}`)
@@ -211,6 +214,7 @@ function countdown(minutes) {
         let current_minutes = mins-1
         seconds--;
         counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+        console.log(current_minutes)
         if(counter.innerHTML === '0:00'){
             window.cancelAnimationFrame(animationId)
             alert(`Time up! Your score is ${points}`)
