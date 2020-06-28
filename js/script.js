@@ -118,7 +118,7 @@ class Fish {
           }
       }
       fishValues(){
-        return 2
+        return 1
       }
       detectCatch(){
         if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 400 && fishing){ //make sure hook works when inside water
@@ -169,10 +169,6 @@ function animation() {
     ctx.drawImage(hook, fishermanXaxis-1, hookYaxis, hookwidth, hookHeight)
     for (i = 0; i < realFish.length; i++) {
         realFish[i].backAgain()
-        if(realFish[i].backAgain()){i
-            tsCaught = false
-            points+= 10
-         }
         realFish[i].draw()
         realFish[i].update()
         realFish[i].detectCatch()        
@@ -181,18 +177,15 @@ function animation() {
     ctx.fillStyle = 'red';
     ctx.strokeText(points, 700, 70);
     ctx.fillText(points, 700, 70);
-    // ctx.strokeText(time, 400, 70);
-    // ctx.fillText(time, 400, 70);
-    // console.log(time)
-    if(points > 5){
+    if(points > 10){
         window.cancelAnimationFrame(animationId)
-        alert(`You won. Your score is ${points}`)
+        alert(`You won. You got 10 fish in less than a minute`)
         location.reload()
     }
 }
 function addPoints(num){
     let score = document.querySelector('#points')
-    console.log('add points', num, points)
+    // console.log('add points', num, points)
     let currentPoints = Number(score.innerText)
     currentPoints += num
     points = currentPoints
@@ -208,16 +201,15 @@ function movehook(e){
 }
 function countdown(minutes) {
     var seconds = 60;
-    var mins = 3
+    var mins = 1
     function tick() {
         let counter = document.getElementById("time");
         let current_minutes = mins-1
         seconds--;
         counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
-        console.log(current_minutes)
         if(counter.innerHTML === '0:00'){
             window.cancelAnimationFrame(animationId)
-            alert(`Time up! Your score is ${points}`)
+            alert(`Time up!. Good Job! You got ${points} fish`)
             location.reload()
         }
         if( seconds > 0 ) {
