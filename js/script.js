@@ -35,7 +35,7 @@ hookHeight = 15
 hookwidth = 10
 let fishAction = ['caught', 'moving'];
 let fishing = true
-// let timeMeter = document.querySelector('.time').innerText
+let time
 
 // ********************* Class *******************************
 class Fish {
@@ -130,7 +130,6 @@ class Fish {
                console.log('Got one!!')
                this.action = 'caught'
                fishing = false
-            //    window.cancelAnimationFrame(animationId)
             }
         }   
       }
@@ -173,10 +172,12 @@ function animation() {
         realFish[i].update()
         realFish[i].detectCatch()        
     }
-    ctx.font = "80px Georgia";
+    ctx.font = "40px Georgia";
     ctx.fillStyle = 'red';
-    ctx.strokeText(points, 700, 70);
-    ctx.fillText(points, 700, 70);
+    ctx.strokeText(points, 750, 50);
+    ctx.fillText(points, 750, 50);
+    ctx.strokeText(time, 30, 50);
+    ctx.fillText(time, 30, 50);
     if(points > 10){
         window.cancelAnimationFrame(animationId)
         alert(`You won. You got 10 fish in less than a minute`)
@@ -184,12 +185,11 @@ function animation() {
     }
 }
 function addPoints(num){
-    let score = document.querySelector('#points')
-    // console.log('add points', num, points)
-    let currentPoints = Number(score.innerText)
-    currentPoints += num
-    points = currentPoints
-    score.innerText = currentPoints
+    // let score = document.querySelector('#points')
+    // let currentPoints = Number(score.innerText)
+    // currentPoints += num
+    points += num
+    // score.innerText = currentPoints
 }
 function movehook(e){
     if(fishermanXaxis >= fishermanEndPosition && hookYaxis > 145){
@@ -203,11 +203,13 @@ function countdown(minutes) {
     var seconds = 60;
     var mins = 1
     function tick() {
-        let counter = document.getElementById("time");
+        // let counter = document.getElementById("time");
         let current_minutes = mins-1
         seconds--;
-        counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
-        if(counter.innerHTML === '0:00'){
+        // counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+        time = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+        console.log(time)
+        if(time === '0:00'){
             window.cancelAnimationFrame(animationId)
             alert(`Time up!. Good Job! You got ${points} fish`)
             location.reload()
