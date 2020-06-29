@@ -1,13 +1,4 @@
-// window.onload = function() {
-//     document.getElementById("start-button").onclick = function() {
-//       startGame();
-//     };
-  
-//     function startGame() {
-  
-//     }
-  
-//   };
+
 // *******************  Global Variables  ***************************
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
